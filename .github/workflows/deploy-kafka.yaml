@@ -3,7 +3,7 @@ name: Deploy kafka topics
 on:
   push:
     branches:
-     - master
+     - main
     paths:
       - kafka/**
       - .github/workflows/deploy-kafka.yaml
