@@ -16,5 +16,5 @@ spec:
       application: tiltakspenger-vedtak
       access: readwrite
     - team: tpts
-      application: tpts-tiltakspenger-mottak
+      application: tiltakspenger-mottak
       access: readwrite
