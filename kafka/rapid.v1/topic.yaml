@@ -21,3 +21,6 @@ spec:
     - team: tpts
       application: tiltakspenger-fakta-person
       access: readwrite
+    - team: tpts
+      application: tiltakspenger-arena
+      access: readwrite
