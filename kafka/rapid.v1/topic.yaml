@@ -24,3 +24,6 @@ spec:
     - team: tpts
       application: tiltakspenger-arena
       access: readwrite
+    - team: tpts
+      application: tiltakspenger-skjerming
+      access: readwrite
