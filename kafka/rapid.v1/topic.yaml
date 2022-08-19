@@ -30,3 +30,6 @@ spec:
     - team: tpts
       application: tiltakspenger-skjerming
       access: readwrite
+    - team: tpts
+      application: tiltakspenger-testmeldinger
+      access: readwrite
