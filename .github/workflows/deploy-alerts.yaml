@@ -1,0 +1,50 @@
+name: Deploy alerts
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - alerts/**
+      - .github/workflows/deploy-alerts.yaml
+
+jobs:
+  deploy-dev:
+    name: Deploy to dev
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        cluster: [ dev-gcp, dev-fss ]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - uses: nais/deploy/actions/deploy@v1
+        env:
+          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
+          CLUSTER: ${{ matrix.cluster }}
+          RESOURCE: alerts/felles-alerts.yaml
+          VARS: alerts/.nais/vars.yaml
+          VAR: alerts_slack_channel=#tpts-varsel
+          PRINT_PAYLOAD: true
+
+  deploy-prod:
+    name: Deploy to prod
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        cluster: [ prod-gcp, prod-fss ]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - uses: nais/deploy/actions/deploy@v1
+        env:
+          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
+          CLUSTER: ${{ matrix.cluster }}
+          RESOURCE: alerts/felles-alerts.yaml
+          VARS: alerts/.nais/vars.yaml
+          VAR: alerts_slack_channel=#tpts-varsel
+          PRINT_PAYLOAD: true
