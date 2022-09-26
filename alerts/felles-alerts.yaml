@@ -12,10 +12,10 @@ spec:
       prependText: '<!here> | '
     email:
       to: 'per.jorgen.walstrom@nav.no'
-      send_resolved: 'true'
+      send_resolved: true
     sms:
       recipients: '97124040'
-      send_resolved: 'false'
+      send_resolved: false
   alerts:
     - alert: applikasjon nede
       expr: sum(kube_deployment_status_replicas_available{namespace="{{namespace}}"}) by (deployment, namespace) == 0
