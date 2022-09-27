@@ -9,7 +9,6 @@ spec:
   receivers:
     slack:
       channel: '{{alerts_slack_channel}}'
-      prependText: '<!per.jorgen.walstrom> | '
     email:
       to: 'per.jorgen.walstrom@nav.no'
       send_resolved: true
