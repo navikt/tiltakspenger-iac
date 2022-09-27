@@ -9,7 +9,7 @@ spec:
   receivers:
     slack:
       channel: '{{alerts_slack_channel}}'
-      prependText: '<!here> | '
+      prependText: '<!per.jorgen.walstrom> | '
     email:
       to: 'per.jorgen.walstrom@nav.no'
       send_resolved: true
@@ -20,8 +20,8 @@ spec:
     - alert: applikasjon nede
       expr: sum(kube_deployment_status_replicas_available{namespace="{{namespace}}"}) by (deployment, namespace) == 0
       for: 5m      
-      description: '\{{ $labels.deployment }} har utilgjengelige podder i \{{ $labels.namespace }}'
-      action: '`kubectl describe pod -l app=\{{ $labels.deployment }} -n \{{ $labels.namespace }}` for events og `kubectl get  pods -l app=\{{ $labels.deployment }} -n \{{ $labels.namespace }}` for å se feilende podder (felles alert)'
+      description: '\{{ $labels.deployment }} har utilgjengelige podder'
+      action: '`kubectl describe pod -l app=\{{ $labels.deployment }} -n \{{ $labels.namespace }}` for events og `kubectl get  pods -l app=\{{ $labels.deployment }} -n \{{ $labels.namespace }}` for å se feilende podder'
     - alert: høy feilrate i logger
       expr: (100 * sum by (log_app, log_namespace) (rate(logd_messages_total{log_level="Error", log_namespace="{{namespace}}"}[3m])) / sum by (log_app, log_namespace) (rate(logd_messages_total{log_namespace="{{namespace}}"}[3m]))) > 90
       for: 3m
