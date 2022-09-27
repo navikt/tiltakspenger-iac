@@ -9,12 +9,6 @@ spec:
   receivers:
     slack:
       channel: '{{alerts_slack_channel}}'
-    email:
-      to: 'per.jorgen.walstrom@nav.no'
-      send_resolved: true
-    sms:
-      recipients: '97124040'
-      send_resolved: false
   alerts:
     - alert: applikasjon nede
       expr: sum(kube_deployment_status_replicas_available{namespace="{{namespace}}"}) by (deployment, namespace) == 0
