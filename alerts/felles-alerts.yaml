@@ -9,6 +9,7 @@ spec:
   receivers:
     slack:
       channel: '{{alerts_slack_channel}}'
+      send_resolved: false
   alerts:
     - alert: applikasjon nede
       expr: sum(kube_deployment_status_replicas_available{namespace="{{namespace}}"}) by (deployment, namespace) == 0
