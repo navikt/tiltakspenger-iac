@@ -33,3 +33,6 @@ spec:
     - team: tpts
       application: tiltakspenger-testmeldinger
       access: readwrite
+    - team: tpts
+      application: tiltakspenger-fp
+      access: readwrite
