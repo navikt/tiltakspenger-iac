@@ -39,3 +39,6 @@ spec:
     - team: tpts
       application: tiltakspenger-ufore
       access: readwrite
+    - team: tpts
+      application: tiltakspenger-sykepenger
+      access: readwrite
