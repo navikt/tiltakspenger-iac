@@ -42,3 +42,6 @@ spec:
     - team: tpts
       application: tiltakspenger-sykepenger
       access: readwrite
+    - team: tpts
+      application: tiltakspenger-vedtak-rivers
+      access: readwrite
