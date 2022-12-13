@@ -19,7 +19,7 @@ spec:
       application: tiltakspenger-mottak
       access: readwrite
     - team: tpts
-      application: tiltakspenger-fakta-person
+      application: tiltakspenger-person
       access: readwrite
     - team: tpts
       application: tiltakspenger-fakta-institusjon
