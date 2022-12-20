@@ -12,15 +12,15 @@ spec:
       send_resolved: false
   alerts:
     - alert: innsending stoppet opp
-      expr: sum(antall_innsendinger_stoppetopp{namespace="{{namespace}}"}) by (deployment, namespace) > 0
+      expr: sum(antall_innsendinger_stoppetopp{kubernetes_namespace="{{namespace}}"}) by (app, kubernetes_namespace) > 0
       for: 5m
-      description: '\{{ $labels.deployment }} har innsendinger som har stoppet opp'
-      action: "Sjekk loggene til app {{ $labels.deployment }} i namespace {{ $labels.namespace }}, for å se hvorfor det har stoppet opp. Kickstart innsendingene igjen."
+      description: '\{{ $labels.app }} har innsendinger som har stoppet opp'
+      action: "Sjekk loggene til app {{ $labels.app }} i namespace {{ $labels.kubernetes_namespace }}, for å se hvorfor det har stoppet opp. Kickstart innsendingene igjen."
     - alert: innsending feilet
-      expr: sum(antall_innsendinger_tilstand_feilet{namespace="{{namespace}}"}) by (deployment, namespace) > 0
+      expr: sum(antall_innsendinger_tilstand_feilet{kubernetes_namespace="{{namespace}}"}) by (app, kubernetes_namespace) > 0
       for: 5m
-      description: '\{{ $labels.deployment }} har innsendinger som har feilet'
-      action: "Sjekk loggene til app {{ $labels.deployment }} i namespace {{ $labels.namespace }}, for å se hvorfor det har feilet. Fiks feilen."
+      description: '\{{ $labels.app }} har innsendinger som har feilet'
+      action: "Sjekk loggene til app {{ $labels.app }} i namespace {{ $labels.kubernetes_namespace }}, for å se hvorfor det har feilet. Fiks feilen."
     - alert: applikasjon nede
       expr: sum(kube_deployment_status_replicas_available{namespace="{{namespace}}"}) by (deployment, namespace) == 0
       for: 5m      
