@@ -45,3 +45,6 @@ spec:
     - team: tpts
       application: tiltakspenger-vedtak-rivers
       access: readwrite
+    - team: tpts
+      application: tiltakspenger-scheduler
+      access: readwrite
