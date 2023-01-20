@@ -1,2 +1,4 @@
 .idea/
 .gradle/
+!.idea/codeStyles/codeStyleConfig.xml
+!.idea/codeStyles/Project.xml
