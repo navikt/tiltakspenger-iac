@@ -1,0 +1,9 @@
+pool: nav-prod
+config:
+    cleanupPolicy: compact  # delete, compact
+    minimumInSyncReplicas: 1
+    partitions: 6
+    replication: 3  # see min/max requirements
+    retentionBytes: -1  # -1 means unlimited
+    retentionHours: -1  # 7 days.  -1 means unlimited
+    segmentHours: 48
