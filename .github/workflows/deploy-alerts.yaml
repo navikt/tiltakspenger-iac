@@ -26,7 +26,6 @@ jobs:
           CLUSTER: ${{ matrix.cluster }}
           RESOURCE: alerts/felles-alerts.yaml
           VARS: alerts/.nais/vars.yaml
-          VAR: alerts_slack_channel=#tpts-varsel
           PRINT_PAYLOAD: true
 
   deploy-prod:
@@ -46,5 +45,4 @@ jobs:
           CLUSTER: ${{ matrix.cluster }}
           RESOURCE: alerts/felles-alerts.yaml
           VARS: alerts/.nais/vars.yaml
-          VAR: alerts_slack_channel=#tpts-varsel-prod
           PRINT_PAYLOAD: true
