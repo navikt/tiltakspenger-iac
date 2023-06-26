@@ -52,3 +52,12 @@ spec:
           labels:
             namespace: {{namespace}}
             severity: critical
+        - alert: mottak av søknad har feilet
+          expr: sum(rate(tpts_tiltakspenger_soknad_antall_soknader_feilet_total{kubernetes_namespace="{{namespace}}"}[2m])) by (app, kubernetes_namespace) > 0
+          for: 2m
+          annotations:
+            consequence: '\{{ $labels.app }} har ikke klart å ta imot en eller flere søknader de siste 2 minuttene'
+            action: "Sjekk loggene til app {{ $labels.app }} i namespace {{ $labels.kubernetes_namespace }}, for å se hvorfor søknad ikke har blitt tatt imot"
+          labels:
+            namespace: {{namespace}}
+            severity: warning
