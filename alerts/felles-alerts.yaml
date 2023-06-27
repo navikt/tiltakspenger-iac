@@ -53,7 +53,7 @@ spec:
             namespace: {{namespace}}
             severity: critical
         - alert: mottak av søknad har feilet
-          expr: sum(rate(tpts_tiltakspenger_soknad_antall_soknader_feilet_total[2m])) > 0
+          expr: sum(rate(tpts_tiltakspenger_soknad_antall_soknader_feilet_total[2m])) > 0.0
           for: 2m
           annotations:
             consequence: '\{{ $labels.app }} har ikke klart å ta imot en eller flere søknader de siste 2 minuttene'
@@ -62,7 +62,7 @@ spec:
             namespace: {{namespace}}
             severity: warning
         - alert: henting av tiltak i søknaden har feilet
-          expr: sum(rate(tpts_tiltakspenger_soknad_antall_feil_ved_hent_tiltak_total[2m])) > 0
+          expr: sum(rate(tpts_tiltakspenger_soknad_antall_feil_ved_hent_tiltak_total[2m])) > 0.0
           for: 2m
           annotations:
             consequence: '\{{ $labels.app }} har ikke klart å hente tiltak for en eller flere personer de siste 2 minuttene'
@@ -71,7 +71,7 @@ spec:
             namespace: {{namespace}}
             severity: warning
         - alert: henting av personalia i søknaden har feilet
-          expr: sum(rate(tpts_tiltakspenger_soknad_antall_feil_ved_hent_personalia_total[2m])) > 0
+          expr: sum(rate(tpts_tiltakspenger_soknad_antall_feil_ved_hent_personalia_total[2m])) > 0.0
           for: 2m
           annotations:
             consequence: '\{{ $labels.app }} har ikke klart å hente personalia for en eller flere personer de siste 2 minuttene'
