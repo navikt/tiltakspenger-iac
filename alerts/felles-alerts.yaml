@@ -61,6 +61,7 @@ spec:
           labels:
             namespace: {{namespace}}
             severity: warning
+            send_resolved: "false"
         - alert: henting av tiltak i søknaden har feilet
           expr: sum(increase(tpts_tiltakspenger_soknad_antall_feil_ved_hent_tiltak_total{namespace="tpts"}[2m])) by (app, namespace) > 0
           for: 30s
@@ -70,6 +71,7 @@ spec:
           labels:
             namespace: {{namespace}}
             severity: warning
+            send_resolved: "false"
         - alert: henting av personalia i søknaden har feilet
           expr: sum(increase(tpts_tiltakspenger_soknad_antall_feil_ved_hent_personalia_total{namespace="tpts"}[2m])) by (app, namespace) > 0
           for: 30s
@@ -79,3 +81,4 @@ spec:
           labels:
             namespace: {{namespace}}
             severity: warning
+            send_resolved: "false"
