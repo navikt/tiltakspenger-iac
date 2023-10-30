@@ -49,5 +49,8 @@ spec:
       application: tiltakspenger-overgangsstonad
       access: readwrite
     - team: tpts
+      application: tiltakspenger-tiltak
+      access: readwrite
+    - team: tpts
       application: tiltakspenger-scheduler
       access: readwrite
