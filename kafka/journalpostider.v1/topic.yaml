@@ -51,3 +51,6 @@ spec:
     - team: tpts
       application: tiltakspenger-scheduler
       access: read
+    - team: tpts
+      application: tiltakspenger-manager-prod
+      access: readwrite
