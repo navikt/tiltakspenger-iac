@@ -55,5 +55,5 @@ spec:
       application: tiltakspenger-scheduler
       access: readwrite
     - team: tpts
-      application: tpts-kcat
+      application: tpts-kafka-manager
       access: readwrite
