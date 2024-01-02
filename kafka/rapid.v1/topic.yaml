@@ -57,3 +57,6 @@ spec:
     - team: tpts
       application: tpts-kafka-cli
       access: readwrite
+    - team: tpts
+      application: tiltakspenger-kafka-manager
+      access: read
