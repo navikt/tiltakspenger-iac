@@ -22,6 +22,9 @@ spec:
       application: tiltakspenger-person
       access: readwrite
     - team: tpts
+      application: tiltakspenger-person-river
+      access: readwrite
+    - team: tpts
       application: tiltakspenger-institusjon
       access: readwrite
     - team: tpts
