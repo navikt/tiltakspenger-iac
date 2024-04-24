@@ -34,6 +34,9 @@ spec:
       application: tiltakspenger-skjerming
       access: readwrite
     - team: tpts
+      application: tiltakspenger-skjerming-river
+      access: readwrite
+    - team: tpts
       application: tiltakspenger-testmeldinger
       access: readwrite
     - team: tpts
