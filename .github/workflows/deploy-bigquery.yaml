@@ -1,0 +1,67 @@
+name: "Terraform - Big Query"
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - bigquery/**
+      - .github/workflows/deploy-bigquery.yaml
+
+env:
+  DEV_DIR: './bigquery/dev'
+#  PROD_DIR: './bigquery/prod'
+
+jobs:
+  terraform-plan-dev:
+    name: "terraform plan gcp-dev"
+    runs-on: ubuntu-latest
+    concurrency: terraform-plan-dev
+    defaults:
+      run:
+        working-directory: ${{ env.DEV_DIR }}
+
+    env:
+      GOOGLE_CREDENTIALS: ${{ secrets.GCP_SECRET_DEV }}
+    steps:
+      - name: "Checkout code"
+        uses: actions/checkout@v4
+
+      - name: Run 'terraform setup'
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Run 'terraform init'
+        run: terraform init
+
+      - name: Run 'terraform fmt'
+        run: terraform fmt -check
+
+      - name: Run 'terraform validate'
+        run: terraform validate
+
+      - name: Run 'terraform plan'
+        run: terraform plan
+
+  terraform-apply-dev:
+    needs: terraform-plan-dev
+    name: "terraform apply gcp-dev"
+    runs-on: ubuntu-latest
+    concurrency: terraform-plan-dev, terraform-apply-dev
+    defaults:
+      run:
+        working-directory: ${{ env.DEV_DIR }}
+
+    env:
+      GOOGLE_CREDENTIALS: ${{ secrets.GCP_SECRET_DEV }}
+    steps:
+      - name: "Checkout code"
+        uses: actions/checkout@v4
+
+      - name: Run 'terraform setup'
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Run 'terraform init'
+        run: terraform init
+
+      - name: Run 'terraform apply'
+        run: terraform apply -auto-approve
