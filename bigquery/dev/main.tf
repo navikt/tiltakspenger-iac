@@ -6,6 +6,9 @@ terraform {
     }
   }
 
+  backend "gcs" {
+    bucket = "tpts-bigquery-terraform-state-dev"
+  }
 }
 
 provider "google" {
