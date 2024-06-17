@@ -5,6 +5,10 @@ terraform {
       version = "5.33.0"
     }
   }
+
+  backend "gcs" {
+    bucket = "tpts-bigquery-terraform-state-dev"
+  }
 }
 
 provider "google" {
