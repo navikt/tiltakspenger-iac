@@ -49,8 +49,5 @@ spec:
       application: tiltakspenger-tiltak
       access: readwrite
     - team: tpts
-      application: tiltakspenger-scheduler
-      access: read
-    - team: tpts
       application: tiltakspenger-kafka-manager
       access: read
