@@ -19,44 +19,14 @@ spec:
       application: tiltakspenger-mottak
       access: readwrite
     - team: tpts
-      application: tiltakspenger-person
-      access: readwrite
-    - team: tpts
-      application: tiltakspenger-person-river
-      access: readwrite
-    - team: tpts
-      application: tiltakspenger-institusjon
-      access: readwrite
-    - team: tpts
       application: tiltakspenger-arena
-      access: readwrite
-    - team: tpts
-      application: tiltakspenger-skjerming
-      access: readwrite
-    - team: tpts
-      application: tiltakspenger-skjerming-river
       access: readwrite
     - team: tpts
       application: tiltakspenger-testmeldinger
       access: readwrite
     - team: tpts
-      application: tiltakspenger-fp
-      access: readwrite
-    - team: tpts
-      application: tiltakspenger-ufore
-      access: readwrite
-    - team: tpts
-      application: tiltakspenger-sykepenger
-      access: readwrite
-    - team: tpts
       application: tiltakspenger-vedtak-rivers
-      access: readwrite
-    - team: tpts
-      application: tiltakspenger-overgangsstonad
       access: readwrite
     - team: tpts
       application: tiltakspenger-tiltak
       access: readwrite
-    - team: tpts
-      application: tiltakspenger-kafka-manager
-      access: read
