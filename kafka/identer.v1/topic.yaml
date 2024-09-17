@@ -16,17 +16,8 @@ spec:
       application: tiltakspenger-vedtak
       access: readwrite
     - team: tpts
-      application: tiltakspenger-mottak
-      access: readwrite
-    - team: tpts
       application: tiltakspenger-arena
       access: read
-    - team: tpts
-      application: tiltakspenger-testmeldinger
-      access: readwrite
-    - team: tpts
-      application: tiltakspenger-vedtak-rivers
-      access: readwrite
     - team: tpts
       application: tiltakspenger-tiltak
       access: readwrite
