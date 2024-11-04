@@ -13,7 +13,7 @@ spec:
   {{/each}}
   acl:
     - team: tpts
-      application: tiltakspenger-vedtak
+      application: tiltakspenger-saksbehandling-api
       access: readwrite
     - team: tpts
       application: tiltakspenger-arena
