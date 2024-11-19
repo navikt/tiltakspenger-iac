@@ -15,7 +15,9 @@ jobs:
     strategy:
       matrix:
         cluster: [ dev-gcp, dev-fss ]
-
+    permissions:
+      contents: read
+      id-token: write
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -33,7 +35,9 @@ jobs:
     strategy:
       matrix:
         cluster: [ prod-gcp, prod-fss ]
-
+    permissions:
+      contents: read
+      id-token: write
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
