@@ -19,10 +19,10 @@ spec:
             namespace: {{namespace}}
             severity: critical
         - alert: Høy feilrate i logger (> 10 feil siste timen)
-          expr: sum by(app) (max_over_time(log_messages_errors{namespace="{{namespace}}", level="Error"}[1h])) > 10
+          expr: sum by(app) (increase(log_messages_errors{namespace="{{namespace}}", level="Error"}[1h])) > 10
           for: 5m
           annotations:
-            action: "Sjekk loggene til app {{ $labels.app }} for å se hvorfor det er så mye feil"
+            action: "Sjekk loggene til app \{{ $labels.app }} for å se hvorfor det er så mye feil"
           labels:
             namespace: {{namespace}}
             severity: critical
