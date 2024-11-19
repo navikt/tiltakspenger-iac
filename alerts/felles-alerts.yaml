@@ -9,26 +9,8 @@ spec:
   groups:
     - name: tiltakspenger-felles-alerts
       rules:
-        - alert: innsending stoppet opp
-          expr: sum(antall_innsendinger_stoppetopp{namespace="{{namespace}}"}) by (app, namespace) > 0
-          for: 5m
-          annotations:
-            consequence: '\{{ $labels.app }} har innsendinger som har stoppet opp'
-            action: "Sjekk loggene til app {{ $labels.app }} i namespace {{ $labels.namespace }}, for å se hvorfor det har stoppet opp. Kickstart innsendingene igjen."
-          labels:
-            namespace: {{namespace}}
-            severity: warning
-        - alert: innsending feilet
-          expr: sum(antall_innsendinger_tilstand_feilet{namespace="{{namespace}}"}) by (app, namespace) > 0
-          for: 5m
-          annotations:
-            consequence: '\{{ $labels.app }} har innsendinger som har feilet'
-            action: "Sjekk loggene til app {{ $labels.app }} i namespace {{ $labels.namespace }}, for å se hvorfor det har feilet. Fiks feilen."
-          labels:
-            namespace: {{namespace}}
-            severity: warning
-        - alert: applikasjon nede
-          expr: sum(kube_deployment_status_replicas_available{namespace="{{namespace}}"}) by (deployment, namespace) == 0
+        - alert: Applikasjon er nede
+          expr: sum by (deployment) (kube_deployment_status_replicas_available{namespace="{{namespace}}"}) == 0
           for: 5m
           annotations:
             consequence: '\{{ $labels.deployment }} har utilgjengelige podder'
@@ -36,49 +18,11 @@ spec:
           labels:
             namespace: {{namespace}}
             severity: critical
-        - alert: høy feilrate i logger
-          expr: (100 * sum by (log_app, log_namespace) (rate(logd_messages_total{log_level="Error", log_namespace="{{namespace}}"}[3m])) / sum by (log_app, log_namespace) (rate(logd_messages_total{log_namespace="{{namespace}}"}[3m]))) > 90
-          for: 3m
+        - alert: Høy feilrate i logger (> 10 feil siste timen)
+          expr: sum by(app) (max_over_time(log_messages_errors{namespace="{{namespace}}", level="Error"}[1h])) > 10
+          for: 5m
           annotations:
-            action: "Sjekk loggene til app {{ $labels.log_app }} i namespace {{ $labels.log_namespace }}, for å se hvorfor det er så mye feil"
+            action: "Sjekk loggene til app {{ $labels.log_app }} for å se hvorfor det er så mye feil"
           labels:
             namespace: {{namespace}}
             severity: critical
-        - alert: feil i selftest
-          expr: selftests_aggregate_result_status{namespace="{{namespace}}"} > 0
-          for: 1m
-          annotations:
-            action: "Sjekk app {{ $labels.app }} i namespace {{ $labels.namespace }} sine selftest for å se hva som er galt"
-          labels:
-            namespace: {{namespace}}
-            severity: critical
-        - alert: mottak av søknad har feilet
-          expr: sum(increase(tpts_tiltakspenger_soknad_antall_soknader_feilet_total{namespace="tpts"}[2m])) by (app, namespace) > 0
-          for: 30s
-          annotations:
-            consequence: '\{{ $labels.app }} har ikke klart å ta imot en eller flere søknader de siste 2 minuttene'
-            action: "Sjekk loggene til app {{ $labels.app }} i namespace {{ $labels.namespace }}, for å se hvorfor søknad ikke har blitt tatt imot"
-          labels:
-            namespace: {{namespace}}
-            severity: warning
-            send_resolved: "false"
-        - alert: henting av tiltak i søknaden har feilet
-          expr: sum(increase(tpts_tiltakspenger_soknad_antall_feil_ved_hent_tiltak_total{namespace="tpts"}[2m])) by (app, namespace) > 0
-          for: 30s
-          annotations:
-            consequence: '\{{ $labels.app }} har ikke klart å hente tiltak for en eller flere personer de siste 2 minuttene'
-            action: "Sjekk loggene til app {{ $labels.app }} i namespace {{ $labels.namespace }}, for å se hvorfor søknad ikke får hentet tiltak"
-          labels:
-            namespace: {{namespace}}
-            severity: warning
-            send_resolved: "false"
-        - alert: henting av personalia i søknaden har feilet
-          expr: sum(increase(tpts_tiltakspenger_soknad_antall_feil_ved_hent_personalia_total{namespace="tpts"}[2m])) by (app, namespace) > 0
-          for: 30s
-          annotations:
-            consequence: '\{{ $labels.app }} har ikke klart å hente personalia for en eller flere personer de siste 2 minuttene'
-            action: "Sjekk loggene til app {{ $labels.app }} i namespace {{ $labels.namespace }}, for å se hvorfor søknad ikke får hentet personalia"
-          labels:
-            namespace: {{namespace}}
-            severity: warning
-            send_resolved: "false"
