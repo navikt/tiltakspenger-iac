@@ -14,9 +14,6 @@ jobs:
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
       emptyMatrix: ${{ steps.set-matrix.outputs.emptyMatrix }}
-    permissions:
-      contents: read
-      id-token: write
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
