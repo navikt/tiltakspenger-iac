@@ -1,0 +1,26 @@
+apiVersion: kafka.nais.io/v1
+kind: Topic
+metadata:
+  name: identhendelse-v1
+  namespace: tpts
+  labels:
+    team: tpts
+spec:
+  pool: {{pool}}
+  config:
+  {{#each config as |value key|}}
+    {{key}}: {{value}}
+  {{/each}}
+  acl:
+    - team: tpts
+      application: tiltakspenger-saksbehandling-api
+      access: write
+    - team: tpts
+      application: tiltakspenger-datadeling
+      access: read
+    - team: tpts
+      application: tiltakspenger-meldekort-api
+      access: read
+    - team: tpts
+      application: tiltakspenger-soknad-api
+      access: read
