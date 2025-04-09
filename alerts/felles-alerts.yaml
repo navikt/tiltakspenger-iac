@@ -26,3 +26,19 @@ spec:
           labels:
             namespace: {{namespace}}
             severity: critical
+        - alert: Utbetaling har feilet
+          expr: tpts_saksbehandlingapi_utbetaling_feilet_count_total > 0
+          for: 1m
+          annotations:
+            action: "Sjekk loggene til saksbehandling-api for å se hva som har skjedd"
+          labels:
+            namespace: {{namespace}}
+            severity: critical
+        - alert: Utbetaling har ikke gått ok etter 3 dager
+          expr: tpts_saksbehandlingapi_utbetaling_ikke_ok_count_total > 0
+          for: 1m
+          annotations:
+            action: "Sjekk loggene til saksbehandling-api for å se hva som har skjedd"
+          labels:
+            namespace: {{namespace}}
+            severity: critical
