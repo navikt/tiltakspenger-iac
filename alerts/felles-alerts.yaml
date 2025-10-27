@@ -19,7 +19,7 @@ spec:
             namespace: {{namespace}}
             severity: critical
         - alert: Høy feilrate i logger (> 5 feil siste timen og > 0 feil siste 15 min)
-          expr: (sum by (app) (increase(log_messages_errors{namespace="{{namespace}}", level="Error"}[1h])) > 5) and (sum by (app) (increase(log_messages_errors{namespace="{{namespace}}", level="Error"}[15m])) > 0)
+          expr: max(sum_over_time(loki:service:loglevel:count1m{detected_level="error", service_namespace="tpts", k8s_container_name=~"tiltakspenger-.*"}[1h])) by (k8s_container_name) > 5 and max(sum_over_time(loki:service:loglevel:count1m{detected_level="error", service_namespace="tpts", k8s_container_name=~"tiltakspenger-.*"}[15m])) by (k8s_container_name) > 0
           annotations:
             action: "Sjekk loggene til app \{{ $labels.app }} for å se hvorfor det er så mye feil"
           labels:
