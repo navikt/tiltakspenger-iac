@@ -22,7 +22,7 @@ spec:
           expr: max(sum_over_time(loki:service:loglevel:count1m{detected_level="error", service_namespace="{{namespace}}", k8s_container_name=~"tiltakspenger-.*"}[1h])) by (service_name) > 5 and max(sum_over_time(loki:service:loglevel:count1m{detected_level="error", service_namespace="{{namespace}}", k8s_container_name=~"tiltakspenger-.*"}[15m])) by (service_name) > 0
           annotations:
             action: "Sjekk loggene til appen \{{ $labels.service_name }} for å se hvorfor det er så mye feil"
-            dashboard_url: "https://grafana.nav.cloud.nais.io/a/grafana-lokiexplore-app/explore/service/\{{ $labels.service_name }}/logs?var-filters=service_name%7C%3D%7C\{{ $labels.service_name }}&var-filters=service_namespace%7C%3D%7C\{{ $labels.namespace }}&from=now-3h&to=now&var-levels=detected_level%7C%3D%7Cerror"
+            dashboard_url: "https://grafana.nav.cloud.nais.io/a/grafana-lokiexplore-app/explore/service/\{{ $labels.service_name }}/logs?var-filters=service_name%7C%3D%7C\{{ $labels.service_name }}&var-filters=service_namespace%7C%3D%7C{{namespace}}&from=now-3h&to=now&var-levels=detected_level%7C%3D%7Cerror"
           labels:
             namespace: {{namespace}}
             severity: critical
