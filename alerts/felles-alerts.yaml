@@ -20,7 +20,6 @@ spec:
             severity: critical
         - alert: Høy feilrate i logger (> 5 feil siste timen og > 0 feil siste 15 min)
           expr: (sum by (app) (increase(log_messages_errors{namespace="{{namespace}}", level="Error"}[1h])) > 5) and (sum by (app) (increase(log_messages_errors{namespace="{{namespace}}", level="Error"}[15m])) > 0)
-          for: 5m
           annotations:
             action: "Sjekk loggene til app \{{ $labels.app }} for å se hvorfor det er så mye feil"
           labels:
@@ -28,7 +27,6 @@ spec:
             severity: critical
         - alert: Utbetaling har feilet
           expr: tpts_saksbehandlingapi_utbetaling_feilet_count_total > 0
-          for: 1m
           annotations:
             action: "Sjekk loggene til saksbehandling-api for å se hva som har skjedd"
           labels:
@@ -36,7 +34,6 @@ spec:
             severity: critical
         - alert: Utbetaling har ikke gått ok etter 3 dager
           expr: tpts_saksbehandlingapi_utbetaling_ikke_ok_count_total > 0
-          for: 1m
           annotations:
             action: "Sjekk loggene til saksbehandling-api for å se hva som har skjedd"
           labels:
