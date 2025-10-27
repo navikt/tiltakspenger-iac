@@ -19,10 +19,10 @@ spec:
             namespace: {{namespace}}
             severity: critical
         - alert: Høy feilrate i logger (> 5 feil siste timen og > 0 feil siste 15 min)
-          expr: max(sum_over_time(loki:service:loglevel:count1m{detected_level="error", service_namespace="{{namespace}}", service_name=~"tiltakspenger-.*"}[1h])) by (service_name) > 5 and max(sum_over_time(loki:service:loglevel:count1m{detected_level="error", service_namespace="{{namespace}}", service_name=~"tiltakspenger-.*"}[15m])) by (service_name) > 0
+          expr: max(sum_over_time(loki:service:loglevel:count1m{detected_level="error", service_namespace="{{namespace}}", k8s_container_name=~"tiltakspenger-.*"}[1h])) by (service_name) > 5 and max(sum_over_time(loki:service:loglevel:count1m{detected_level="error", service_namespace="{{namespace}}", k8s_container_name=~"tiltakspenger-.*"}[15m])) by (service_name) > 0
           annotations:
-            action: "Sjekk loggene til appen for å se hvorfor det er så mye feil (app: \{{ $labels.service_name }} - container: \{{ $labels.k8s_container_name }})"
-            dashboard_url: "https://grafana.nav.cloud.nais.io/a/grafana-lokiexplore-app/explore/service/\{{ $labels.service_name }}/logs?var-filters=service_name%7C%3D%7C\{{ $labels.service_name }}&var-filters=service_namespace%7C%3D%7C\{{ $labels.service_namespace }}&from=now-3h&to=now&var-levels=detected_level%7C%3D%7Cerror"
+            action: "Sjekk loggene til appen \{{ $labels.service_name }} for å se hvorfor det er så mye feil"
+            dashboard_url: "https://grafana.nav.cloud.nais.io/a/grafana-lokiexplore-app/explore/service/\{{ $labels.service_name }}/logs?var-filters=service_name%7C%3D%7C\{{ $labels.service_name }}&var-filters=service_namespace%7C%3D%7C\{{ $labels.namespace }}&from=now-3h&to=now&var-levels=detected_level%7C%3D%7Cerror"
           labels:
             namespace: {{namespace}}
             severity: critical
