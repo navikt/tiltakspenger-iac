@@ -19,7 +19,7 @@ spec:
             namespace: {{namespace}}
             severity: critical
         - alert: Høy feilrate i logger (> 5 feil siste timen og > 0 feil siste 15 min)
-          expr: sum by(app) (increase(log_messages_errors{namespace="{{namespace}}", level="Error"}[1h])) > 5 and (increase(log_messages_errors{namespace="{{namespace}}", level="Error"}[15m])) > 0
+          expr: sum by(app) ((increase(log_messages_errors{namespace="{{namespace}}", level="Error"}[1h])) > 5 and (increase(log_messages_errors{namespace="{{namespace}}", level="Error"}[15m])) > 0)
           for: 5m
           annotations:
             action: "Sjekk loggene til app \{{ $labels.app }} for å se hvorfor det er så mye feil"
