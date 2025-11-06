@@ -42,7 +42,7 @@ spec:
             namespace: {{namespace}}
             severity: critical
         - alert: Kafka consumer offset lag
-          expr: sum by(group, topic) (kafka_consumergroup_group_lag{group=~"^tiltakspenger-.*",client_id!="unknown"}) > 5
+          expr: sum by(group, topic) (kafka_consumergroup_group_topic_sum_lag{group=~"^tiltakspenger-.*",client_id!="unknown"}) > 5
           for: 5m
           annotations:
             action: 'Konsument `{{ $labels.group }}` har forsinkelse på lesing fra kafkatopic `{{ $labels.topic }}`. Sjekk loggene for å finne ut hvorfor.'
