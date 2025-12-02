@@ -1,9 +1,0 @@
-pool: nav-dev
-config:
-    cleanupPolicy: compact
-    minimumInSyncReplicas: 1
-    partitions: 3
-    replication: 2
-    retentionBytes: -1
-    retentionHours: -1
-    segmentHours: 48
