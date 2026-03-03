@@ -8,7 +8,6 @@ on:
       - kafka/**
       - .github/workflows/deploy-kafka.yaml
       - '!kafka/README.md'
-  workflow_dispatch:
 
 jobs:
   setup-matrix:
