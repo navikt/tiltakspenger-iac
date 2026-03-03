@@ -1,0 +1,25 @@
+name: Deploy kafka manager
+
+on:
+  push:
+    branches:
+     - main
+    paths:
+      - kafka-manager/kafka-manager-dev.yaml
+      - .github/workflows/deploy-kafka-manager.yaml
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Deploy to dev
+        uses: nais/deploy/actions/deploy@v2
+        env:
+          CLUSTER: dev-gcp
+          RESOURCE: kafka-manager/kafka-manager-dev.yaml
+          PRINT_PAYLOAD: true
