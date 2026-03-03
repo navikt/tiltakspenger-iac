@@ -1,0 +1,64 @@
+kind: Application
+apiVersion: nais.io/v1alpha1
+metadata:
+  name: tiltakspenger-kafka-manager
+  namespace: tpts
+  labels:
+    team: tpts
+spec:
+  image: europe-north1-docker.pkg.dev/nais-management-233d/poao/kafka-manager:2026.02.02-10.25-5d812a3 # See https://console.cloud.google.com/artifacts/docker/nais-management-233d/europe-north1/poao/kafka-manager
+  port: 8080
+  webproxy: true
+  ingresses:
+    - https://tpts-kafka-manager.intern.dev.nav.no
+  prometheus:
+    enabled: true
+    path: /internal/prometheus
+  readiness:
+    path: /internal/health/readiness
+    initialDelay: 20
+  liveness:
+    path: /internal/health/liveness
+    initialDelay: 20
+  replicas:
+    min: 1
+    max: 1  # 1 instance is required since in-memory session management is used
+    cpuThresholdPercentage: 75
+  resources:
+    limits:
+      cpu: "1"
+      memory: 1024Mi
+    requests:
+      cpu: 250m
+      memory: 512Mi
+#  vault:   # Optional. Required for on-prem (the env variables SERVICE_USER_NAME, SERVICE_USER_PASSWORD can also be used)
+#    enabled: true
+#    paths:
+#      - kvPath: /serviceuser/data/<dev|prod>/srv<team>-kafka-manager
+#        mountPath: /var/run/secrets/nais.io/service_user
+  azure: # Required
+    application:
+      enabled: true
+      tenant: nav.no
+      claims:
+        groups:
+          - id: e2b75a8a-3c25-40b7-81fb-dd52804e7a82 # 0000-GA-Team-Tiltakspenger-TP
+  kafka: # Optional. Required for Aiven
+    pool: nav-dev
+  env:
+#    - name: ON_PREM_KAFKA_BROKERS_URL # Optional. Required for on-prem
+#      value: <BROKER URL>
+#    - name: ON_PREM_SCHEMA_REGISTRY_URL # Optional. Required for on-prem topics that uses Avro
+#      value: <SCHEMA REGISTRY URL>
+    - name: APP_CONFIG_JSON # Required
+      value: >
+        {
+          "topics": [
+            {
+              "name": "tpts.identhendelse-v1",
+              "location": "AIVEN",
+              "keyDeserializerType": "STRING",
+              "valueDeserializerType": "STRING"
+            }
+          ]
+        }
