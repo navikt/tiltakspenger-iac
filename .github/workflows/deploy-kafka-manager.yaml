@@ -9,6 +9,9 @@ on:
       - .github/workflows/deploy-kafka-manager.yaml
   workflow_dispatch:
 
+# Minste privilegium: toppnivået nullstiller alle token-rettigheter, hver jobb deklarerer eksplisitt det den trenger.
+permissions: {}
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -17,9 +20,11 @@ jobs:
       id-token: write
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
       - name: Deploy to dev
-        uses: nais/deploy/actions/deploy@v2
+        uses: nais/deploy/actions/deploy@027a91857992525139798892f2804b0ca21f4af6 # v2
         env:
           CLUSTER: dev-gcp
           RESOURCE: kafka-manager/kafka-manager-dev.yaml
