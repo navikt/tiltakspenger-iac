@@ -9,31 +9,47 @@ on:
       - .github/workflows/deploy-kafka.yaml
       - '!kafka/README.md'
 
+# Minste privilegium: toppnivået nullstiller alle token-rettigheter, hver jobb deklarerer eksplisitt det den trenger.
+permissions: {}
+
 jobs:
   setup-matrix:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
       emptyMatrix: ${{ steps.set-matrix.outputs.emptyMatrix }}
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
           fetch-depth: 0
+          persist-credentials: false
 
       - id: set-matrix
+        # Intervallet vi leter etter endrede topic-kataloger i: forrige main-tipp til commiten som ble pushet.
+        # Verdiene sendes via env framfor å interpoleres inn i skriptet - et ${{ }}-uttrykk erstattes
+        # tekstlig før shellet starter, og blir dermed shell-kode (zizmor template-injection).
+        env:
+          FRA_SHA: ${{ github.event.before }}
+          TIL_SHA: ${{ github.sha }}
         run: |
-          MATRIX=$(git diff-tree --diff-filter=d --no-commit-id --name-only -r ${{ github.event.before }} ${{ github.sha }} | grep kafka/ | cut -d '/' -f 2 | sort -u | paste -d',' -s )
-          echo Matrix is $MATRIX
-          if [[  -z "${MATRIX// }" ]]; then
+          MATRIX=$(git diff-tree --diff-filter=d --no-commit-id --name-only -r "$FRA_SHA" "$TIL_SHA" | grep kafka/ | cut -d '/' -f 2 | sort -u | paste -d',' -s )
+          echo "Matrix is $MATRIX"
+          if [[ -z "${MATRIX// }" ]]; then
             echo "Empty matrix"
-            echo "::set-output name=emptyMatrix::true"
-            echo "::set-output name=matrix::[]"
+            {
+              echo "emptyMatrix=true"
+              echo "matrix=[]"
+            } >> "$GITHUB_OUTPUT"
           else
-            JSON=$(jq -c -n --arg v $MATRIX '{"topic": $v|split(",")}')
+            JSON=$(jq -c -n --arg v "$MATRIX" '{"topic": $v|split(",")}')
             echo "matrix: $JSON"
-            echo "::set-output name=matrix::$JSON"
-            echo "::set-output name=emptyMatrix::false"
+            {
+              echo "matrix=$JSON"
+              echo "emptyMatrix=false"
+            } >> "$GITHUB_OUTPUT"
           fi
   deploy:
     needs: setup-matrix
@@ -47,16 +63,18 @@ jobs:
       id-token: write
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
       - name: deploy to dev
-        uses: nais/deploy/actions/deploy@v2
+        uses: nais/deploy/actions/deploy@027a91857992525139798892f2804b0ca21f4af6 # v2
         env:
           CLUSTER: dev-gcp
           RESOURCE: kafka/${{ matrix.topic }}/topic.yaml
           VARS: kafka/${{ matrix.topic }}/dev-vars.yaml
           PRINT_PAYLOAD: true
       - name: deploy to prod
-        uses: nais/deploy/actions/deploy@v2
+        uses: nais/deploy/actions/deploy@027a91857992525139798892f2804b0ca21f4af6 # v2
         env:
           CLUSTER: prod-gcp
           RESOURCE: kafka/${{ matrix.topic }}/topic.yaml

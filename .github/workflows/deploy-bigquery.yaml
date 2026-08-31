@@ -8,12 +8,17 @@ on:
       - bigquery/**
       - .github/workflows/deploy-bigquery.yaml
 
+# Minste privilegium: toppnivået nullstiller alle token-rettigheter, hver jobb deklarerer eksplisitt det den trenger.
+permissions: {}
+
 env:
   DEV_DIR: './bigquery/dev'
   PROD_DIR: './bigquery/prod'
 
 jobs:
   terraform-plan-dev:
+    permissions:
+      contents: read
     name: "terraform plan gcp-dev"
     runs-on: ubuntu-latest
     concurrency: terraform-plan-dev
@@ -25,10 +30,12 @@ jobs:
       GOOGLE_CREDENTIALS: ${{ secrets.GCP_SECRET_DEV }}
     steps:
       - name: "Checkout code"
-        uses: actions/checkout@v4
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
 
       - name: Run 'terraform setup'
-        uses: hashicorp/setup-terraform@v3
+        uses: hashicorp/setup-terraform@b9cd54a3c349d3f38e8881555d616ced269862dd # v3.1.2
 
       - name: Run 'terraform init'
         run: terraform init
@@ -43,6 +50,8 @@ jobs:
         run: terraform plan
 
   terraform-plan-prod:
+    permissions:
+      contents: read
     name: "terraform plan gcp-prod"
     runs-on: ubuntu-latest
     concurrency: terraform-plan-prod
@@ -54,10 +63,12 @@ jobs:
       GOOGLE_CREDENTIALS: ${{ secrets.GCP_SECRET_PROD }}
     steps:
       - name: "Checkout code"
-        uses: actions/checkout@v4
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
 
       - name: Run 'terraform setup'
-        uses: hashicorp/setup-terraform@v3
+        uses: hashicorp/setup-terraform@b9cd54a3c349d3f38e8881555d616ced269862dd # v3.1.2
 
       - name: Run 'terraform init'
         run: terraform init
@@ -72,6 +83,8 @@ jobs:
         run: terraform plan
 
   terraform-apply-dev:
+    permissions:
+      contents: read
     needs: terraform-plan-dev
     name: "terraform apply gcp-dev"
     runs-on: ubuntu-latest
@@ -84,10 +97,12 @@ jobs:
       GOOGLE_CREDENTIALS: ${{ secrets.GCP_SECRET_DEV }}
     steps:
       - name: "Checkout code"
-        uses: actions/checkout@v4
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
 
       - name: Run 'terraform setup'
-        uses: hashicorp/setup-terraform@v3
+        uses: hashicorp/setup-terraform@b9cd54a3c349d3f38e8881555d616ced269862dd # v3.1.2
 
       - name: Run 'terraform init'
         run: terraform init
@@ -96,6 +111,8 @@ jobs:
         run: terraform apply -auto-approve
 
   terraform-apply-prod:
+    permissions:
+      contents: read
     needs: terraform-plan-prod
     name: "terraform apply gcp-prod"
     runs-on: ubuntu-latest
@@ -108,10 +125,12 @@ jobs:
       GOOGLE_CREDENTIALS: ${{ secrets.GCP_SECRET_PROD }}
     steps:
       - name: "Checkout code"
-        uses: actions/checkout@v4
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
 
       - name: Run 'terraform setup'
-        uses: hashicorp/setup-terraform@v3
+        uses: hashicorp/setup-terraform@b9cd54a3c349d3f38e8881555d616ced269862dd # v3.1.2
 
       - name: Run 'terraform init'
         run: terraform init
