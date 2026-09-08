@@ -35,3 +35,21 @@ spec:
           labels:
             namespace: {{namespace}}
             severity: warning
+        - alert: Jobb har stoppet
+          expr: time() - max by (app, prosess, type) (tpts_bakgrunnsprosess_sist_vellykket_tidspunkt_sekunder{namespace="{{namespace}}", type="jobb"}) > clamp_min(3 * max by (app, prosess, type) (tpts_bakgrunnsprosess_intervall_sekunder{namespace="{{namespace}}", type="jobb"}), 600)
+          for: 10m
+          annotations:
+            consequence: 'Jobben \{{ $labels.prosess }} i \{{ $labels.app }} har sluttet å kjøre'
+            action: 'Sjekk om poden lever, om leader-election henger, og om loggene viser at jobben har stoppet.'
+          labels:
+            namespace: {{namespace}}
+            severity: warning
+        - alert: Meldingsleser har stoppet
+          expr: time() - max by (app, prosess, type, pod) (tpts_bakgrunnsprosess_sist_vellykket_tidspunkt_sekunder{namespace="{{namespace}}", type="meldingsleser"}) > clamp_min(3 * max by (app, prosess, type, pod) (tpts_bakgrunnsprosess_intervall_sekunder{namespace="{{namespace}}", type="meldingsleser"}), 600)
+          for: 10m
+          annotations:
+            consequence: 'Meldingsleseren \{{ $labels.prosess }} i poden \{{ $labels.pod }} for \{{ $labels.app }} har sluttet å kjøre'
+            action: 'Sjekk loggene for poden \{{ $labels.pod }} og om consumeren har stoppet å polle.'
+          labels:
+            namespace: {{namespace}}
+            severity: warning
