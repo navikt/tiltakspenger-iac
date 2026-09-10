@@ -11,9 +11,20 @@ on:
 # Minste privilegium: toppnivået nullstiller alle token-rettigheter, hver jobb deklarerer eksplisitt det den trenger.
 permissions: {}
 
+# Én gruppe for hele workflowen, slik at to kjøringer aldri planlegger og utfører om hverandre.
+# Grupper per jobb gjorde ikke jobben: `terraform-plan-dev, terraform-apply-dev` er ett gruppenavn med komma i, ikke to grupper.
+# cancel-in-progress er av med vilje: en avbrutt apply kan etterlate state-låsen og halvferdig arbeid.
+concurrency:
+  group: terraform-bigquery
+  cancel-in-progress: false
+
 env:
   DEV_DIR: './bigquery/dev'
   PROD_DIR: './bigquery/prod'
+  # Terraform-versjonen er låst. Uten den installerer actionen `latest`, og en ny utgivelse kan endre prod
+  # uten at noen har valgt den. 1.16.2 kom dagen før kjøringen 2026-09-10.
+  # Løftes bevisst, sammen med required_version i bigquery/*/main.tf.
+  TERRAFORM_VERSION: '1.16.2'
 
 jobs:
   terraform-plan-dev:
@@ -21,7 +32,6 @@ jobs:
       contents: read
     name: "terraform plan gcp-dev"
     runs-on: ubuntu-latest
-    concurrency: terraform-plan-dev
     defaults:
       run:
         working-directory: ${{ env.DEV_DIR }}
@@ -36,6 +46,8 @@ jobs:
 
       - name: Run 'terraform setup'
         uses: hashicorp/setup-terraform@dfe3c3f87815947d99a8997f908cb6525fc44e9e # v4.0.1
+        with:
+          terraform_version: ${{ env.TERRAFORM_VERSION }}
 
       - name: Run 'terraform init'
         run: terraform init
@@ -54,7 +66,6 @@ jobs:
       contents: read
     name: "terraform plan gcp-prod"
     runs-on: ubuntu-latest
-    concurrency: terraform-plan-prod
     defaults:
       run:
         working-directory: ${{ env.PROD_DIR }}
@@ -69,6 +80,8 @@ jobs:
 
       - name: Run 'terraform setup'
         uses: hashicorp/setup-terraform@dfe3c3f87815947d99a8997f908cb6525fc44e9e # v4.0.1
+        with:
+          terraform_version: ${{ env.TERRAFORM_VERSION }}
 
       - name: Run 'terraform init'
         run: terraform init
@@ -88,7 +101,6 @@ jobs:
     needs: terraform-plan-dev
     name: "terraform apply gcp-dev"
     runs-on: ubuntu-latest
-    concurrency: terraform-plan-dev, terraform-apply-dev
     defaults:
       run:
         working-directory: ${{ env.DEV_DIR }}
@@ -103,6 +115,8 @@ jobs:
 
       - name: Run 'terraform setup'
         uses: hashicorp/setup-terraform@dfe3c3f87815947d99a8997f908cb6525fc44e9e # v4.0.1
+        with:
+          terraform_version: ${{ env.TERRAFORM_VERSION }}
 
       - name: Run 'terraform init'
         run: terraform init
@@ -113,10 +127,10 @@ jobs:
   terraform-apply-prod:
     permissions:
       contents: read
-    needs: terraform-plan-prod
+    # Venter også på dev-apply: en feil i dev skal stoppe prod, ikke bare rapporteres ved siden av.
+    needs: [ terraform-plan-prod, terraform-apply-dev ]
     name: "terraform apply gcp-prod"
     runs-on: ubuntu-latest
-    concurrency: terraform-plan-prod, terraform-apply-prod
     defaults:
       run:
         working-directory: ${{ env.PROD_DIR }}
@@ -131,6 +145,8 @@ jobs:
 
       - name: Run 'terraform setup'
         uses: hashicorp/setup-terraform@dfe3c3f87815947d99a8997f908cb6525fc44e9e # v4.0.1
+        with:
+          terraform_version: ${{ env.TERRAFORM_VERSION }}
 
       - name: Run 'terraform init'
         run: terraform init
