@@ -53,3 +53,14 @@ spec:
           labels:
             namespace: {{namespace}}
             severity: warning
+        # Vakt for de to reglene over: forsvinner målingene helt, får uttrykkene deres ingen serier å regne på, og appen blir stille i stedet for rød.
+        # Begge målingene sjekkes, fordi begge reglene bruker begge. Utvid applista når en ny app får jobber eller meldingslesere.
+        - alert: Bakgrunnsprosesser mangler målinger
+          expr: group by (app) (up{namespace="{{namespace}}", app=~"tiltakspenger-(saksbehandling-api|journalposthendelser|datadeling|meldekort-api|soknad-api)"} == 1) unless on (app) (group by (app) (tpts_bakgrunnsprosess_intervall_sekunder{namespace="{{namespace}}"}) and on (app) group by (app) (tpts_bakgrunnsprosess_sist_vellykket_tidspunkt_sekunder{namespace="{{namespace}}"}))
+          for: 15m
+          annotations:
+            consequence: 'Vi blir ikke varslet hvis bakgrunnsprosessene i \{{ $labels.app }} stopper'
+            action: 'Sjekk siste utrulling av \{{ $labels.app }}. Kontroller at appen bruker et bibliotek med målingene, og at bakgrunnsprosessene fører dem i det registeret `/metrics` skraper.'
+          labels:
+            namespace: {{namespace}}
+            severity: warning
