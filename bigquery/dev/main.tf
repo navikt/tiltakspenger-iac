@@ -1,4 +1,8 @@
 terraform {
+  # Låst til samme serie som CI kjører (TERRAFORM_VERSION i deploy-bigquery.yaml).
+  # Avviser en Terraform som er eldre enn den testede, og en ny minor som kan skrive state en eldre versjon ikke leser.
+  required_version = "~> 1.16.2"
+
   required_providers {
     google = {
       source  = "hashicorp/google"
