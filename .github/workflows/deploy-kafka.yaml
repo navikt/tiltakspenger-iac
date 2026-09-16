@@ -67,14 +67,14 @@ jobs:
         with:
           persist-credentials: false
       - name: deploy to dev
-        uses: nais/deploy/actions/deploy@027a91857992525139798892f2804b0ca21f4af6 # v2
+        uses: nais/deploy/actions/deploy@1de80da70ad26556ecdc5964a8b7ec3bbed98120 # v2
         env:
           CLUSTER: dev-gcp
           RESOURCE: kafka/${{ matrix.topic }}/topic.yaml
           VARS: kafka/${{ matrix.topic }}/dev-vars.yaml
           PRINT_PAYLOAD: true
       - name: deploy to prod
-        uses: nais/deploy/actions/deploy@027a91857992525139798892f2804b0ca21f4af6 # v2
+        uses: nais/deploy/actions/deploy@1de80da70ad26556ecdc5964a8b7ec3bbed98120 # v2
         env:
           CLUSTER: prod-gcp
           RESOURCE: kafka/${{ matrix.topic }}/topic.yaml
