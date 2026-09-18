@@ -64,3 +64,19 @@ spec:
           labels:
             namespace: {{namespace}}
             severity: warning
+        # Etterlevelseskrav K267.2 (Informasjonssikkerhet, suksesskriterie 2): apper skal bygges og deployes minst
+        # hver tredje måned, slik at deploy-veien er kjent god den dagen en sårbarhet må rettes raskt.
+        # Vi varsler etter 75 dager for å ha tid igjen før fristen på 90.
+        # Alderen leses av nyeste ReplicaSet: hver deploy med nytt image gir et nytt ReplicaSet, mens omstart,
+        # node-flytting og skalering gjenbruker det gamle. En plattform-endring i pod-malen kan nullstille alderen
+        # uten at vi har bygget selv, så regelen kan komme til å tie for lenge — den kan ikke varsle for tidlig.
+        # Apper som er slettet har ingen serier og varsles ikke; repoer uten Nais-app (libs, workflows, iac) dekkes ikke her.
+        - alert: Appen er ikke deployet på over 75 dager
+          expr: (time() - max by (app) (label_replace(kube_replicaset_created{namespace="{{namespace}}"} * on (namespace, replicaset) group_left(owner_name) kube_replicaset_owner{namespace="{{namespace}}", owner_kind="Deployment"}, "app", "$1", "owner_name", "(.*)"))) > 75 * 24 * 3600
+          for: 1h
+          annotations:
+            consequence: '\{{ $labels.app }} nærmer seg brudd på etterlevelseskrav K267.2: bygg og deploy minst hver tredje måned. Vi vet ikke om deploy-veien fortsatt virker, og tredjepartskoden i imaget blir liggende uoppdatert.'
+            action: 'Oppdater avhengighetene i repoet til \{{ $labels.app }} og merge til main slik at appen bygges og deployes på nytt. Er appen ikke lenger i bruk, fjern den i stedet.'
+          labels:
+            namespace: {{namespace}}
+            severity: warning
