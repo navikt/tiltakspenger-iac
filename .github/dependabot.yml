@@ -1,5 +1,5 @@
 # Standard Dependabot-konfig for repo uten kodeavhengigheter Dependabot skal følge (iac, pdfgen; metarepoet bruker denne).
-# Holder SHA-pinnede actions ferske.
+# Holder actions ferske; Dependabot oppdaterer tag-en i workflowen og låsen i .github/workflows/actions.lock i samme PR.
 version: 2
 updates:
   - package-ecosystem: github-actions

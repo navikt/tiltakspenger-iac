@@ -23,11 +23,11 @@ jobs:
       id-token: write
     steps:
       - name: Checkout code
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        uses: actions/checkout@v7.0.1
         with:
           persist-credentials: false
 
-      - uses: nais/deploy/actions/deploy@1de80da70ad26556ecdc5964a8b7ec3bbed98120 # v2
+      - uses: nais/deploy/actions/deploy@master
         env:
           CLUSTER: ${{ matrix.cluster }}
           RESOURCE: alerts/felles-alerts.yaml
@@ -46,11 +46,11 @@ jobs:
       id-token: write
     steps:
       - name: Checkout code
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        uses: actions/checkout@v7.0.1
         with:
           persist-credentials: false
 
-      - uses: nais/deploy/actions/deploy@1de80da70ad26556ecdc5964a8b7ec3bbed98120 # v2
+      - uses: nais/deploy/actions/deploy@master
         env:
           CLUSTER: ${{ matrix.cluster }}
           RESOURCE: alerts/felles-alerts.yaml
