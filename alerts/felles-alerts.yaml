@@ -80,3 +80,13 @@ spec:
           labels:
             namespace: {{namespace}}
             severity: warning
+        # En ytelsestype fra sokos-utbetaldata som verken står i Ytelsetype eller utelatteYtelsestyper i saksbehandling-api, forkastes uten spor.
+        # Telleren nullstilles ved omstart, så varselet står til neste deploy og kommer tilbake hvis typen ses igjen.
+        - alert: Ukjent ytelsestype fra utbetaldata
+          expr: max by (ytelsestype) (tpts_saksbehandlingapi_utbetaldata_ukjente_ytelser_total{namespace="{{namespace}}"}) > 0
+          annotations:
+            consequence: 'Ytelsestypen «\{{ $labels.ytelsestype }}» fra sokos-utbetaldata er ukjent, så den forkastes fra saksopplysningene og utbetalingsoversikten og stopper ikke automatisk behandling.'
+            action: 'Avgjør om typen fratar retten til tiltakspenger (tiltakspengeforskriften § 7), og legg den i Ytelsetype eller utelatteYtelsestyper i tiltakspenger-saksbehandling-api.'
+          labels:
+            namespace: {{namespace}}
+            severity: warning
