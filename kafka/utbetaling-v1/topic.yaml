@@ -1,0 +1,26 @@
+apiVersion: kafka.nais.io/v1
+kind: Topic
+metadata:
+  name: utbetaling-v1
+  namespace: tpts
+  labels:
+    team: tpts
+spec:
+  pool: {{pool}}
+  config:
+  {{#each config as |value key|}}
+    {{key}}: {{value}}
+  {{/each}}
+  acl:
+    - team: tpts
+      application: tiltakspenger-saksbehandling-api
+      access: write
+    - team: helved
+      application: abetal
+      access: read
+    - team: helved
+      application: peisschtappern
+      access: read
+    - team: tpts
+      application: tiltakspenger-kafka-manager
+      access: read
