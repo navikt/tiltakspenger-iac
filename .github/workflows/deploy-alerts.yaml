@@ -31,7 +31,7 @@ jobs:
         env:
           CLUSTER: ${{ matrix.cluster }}
           RESOURCE: alerts/felles-alerts.yaml
-          VAR: datasource=dev-gcp-loki
+          VAR: k8s_cluster_name=dev
           VARS: alerts/.nais/vars.yaml
           PRINT_PAYLOAD: true
 
@@ -54,6 +54,6 @@ jobs:
         env:
           CLUSTER: ${{ matrix.cluster }}
           RESOURCE: alerts/felles-alerts.yaml
-          VAR: datasource=prod-gcp-loki
+          VAR: k8s_cluster_name=prod
           VARS: alerts/.nais/vars.yaml
           PRINT_PAYLOAD: true
